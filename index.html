@@ -1,0 +1,91 @@
+<head>
+
+</head>
+<style>
+  body {
+    width: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: courier;
+    color: lime;
+    background-color: black;
+    margin: 0 auto;
+  }
+
+</style>
+
+<body>
+  <p></p>
+</body>
+
+<script>
+  const colors = [
+    '🤪',
+    '😱',
+    '🤠',
+    '🤣',
+    '🧐'
+  ];
+
+    const notes = [
+    '174.6',
+    '130.8',
+    '349.2',
+    '110',
+    '164.8'
+  ];
+  function randomEmoji(colors) {
+    return colors[Math.floor(Math.random() * colors.length)];
+  }
+  
+    function randomNote(colors) {
+    return notes[Math.floor(Math.random() * notes.length)];
+  }
+  var coucou = randomEmoji(colors);
+
+    var music = randomNote(notes);
+
+  function prepareAudio() {
+    var context = new AudioContext();
+    var o = context.createOscillator();
+    var g = context.createGain();
+    o.connect(g);
+    g.connect(context.destination);
+    o.start(0);
+    g.gain.exponentialRampToValueAtTime(
+      0.00001, context.currentTime + 0.88888
+    );
+
+    var frequency = randomNote(notes);
+    o.frequency.value = frequency;
+
+  };
+
+  document.body.addEventListener("click", prepareAudio);
+
+  const es = new EventSource('https://wikimon.glitch.me');
+  es.onmessage = e => {
+    function randomEmoji(colors) {
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+    var coucou = randomEmoji(colors);
+    var hellowiki = JSON.parse(e.data);
+    var objwiki = hellowiki.page_title;
+    var robot = hellowiki.is_bot;
+    var anon = hellowiki.is_anon;
+    console.log(hellowiki);
+    prepareAudio();
+    if (robot == true) {
+      document.querySelector("body").style.color = 'red';
+      var frequency = 400;
+    } else if (anon == true) {
+      document.querySelector("body").style.color = 'orange'
+    } else {
+      document.querySelector("body").style.color = 'lime'
+    }
+    document.querySelector("p").append(' ' + coucou + ' ' + objwiki);
+    window.scrollTo(0, document.body.scrollHeight);
+  };
+
+</script>
